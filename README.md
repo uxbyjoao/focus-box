@@ -47,7 +47,7 @@ After installation, we have to tell VSCode where the Arduino IDE is located. Go 
 
 #### Installation
 
-Still in VSCode's Arduino extension settings, find "Arduino: Additional Urls". Click on "Edit in settings.json". Edit the "arduino.additionalUrls" property. The extension expects a string with URLs separated by a comma (,). Add the following URL to the string:
+Still in VSCode's Arduino extension settings, find "Arduino: Additional Urls". Click on "Edit in settings.json". Edit the `arduino.additionalUrls` property. The extension expects a string with URLs separated by a comma (,). Add the following URL to the string:
 
 ```
 http://arduino.esp8266.com/stable/package_esp8266com_index.json
