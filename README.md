@@ -7,7 +7,6 @@ This is an IOT project developed for the Advanced Human-Interface Design subject
 ## Hardware Components
 
 - AZDelivery NodeMCU Lua Lolin V3 (ESP8266)
-- 
 
 ## Software Libraries
 
@@ -66,9 +65,9 @@ First, connect your ESP8266 board to the computer if you haven't already.
 
 On VSCode's bottom bar, click on "Select Board Type". On this window, select the following options:
 
-**Selected Board:**  NodeMCU 1.0 (ESP-12E Module)
-**CPU Frequency:** 80MHz
-**Flash Size:** 4MB (FS:3MB OTA:~512KB)
+- **Selected Board:**  NodeMCU 1.0 (ESP-12E Module)
+- **CPU Frequency:** 80MHz
+-  **Flash Size:** 4MB (FS:3MB OTA:~512KB)
 
 We will now select the serial port to where our board is connected. Linux creates a folder for this. On your Terminal, type `ls /dev/tty*` and look for a folder that includes either `USB*` or `ACM*`, where "*" is a number (i.e. USB0). That's the serial port name you should select in VSCode. Go to VSCode's bottom bar, click on "Select Serial Port" and select the corresponding folder you found on your Terminal.
 
