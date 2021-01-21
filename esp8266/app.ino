@@ -9,16 +9,27 @@
 */
 #include "FirebaseESP8266.h"
 #include <ESP8266WiFi.h>
+#include <SPI.h>
+#include <MFRC522.h>
 
-// App Configuration
-// See documentation at https://github.com/mobizt/Firebase-ESP8266
+// #define SERIAL_BAUD_RATE 115200
+
+// Pin Configuration
+// #define INTERNAL_LED_PIN D4
+#define READER_SS_PIN D2
+#define READER_RESET_PIN D3
+
+// Firebase App Configuration
+// See Firebase documentation at https://github.com/mobizt/Firebase-ESP8266
 #define FIREBASE_HOST_URL "focus-box.firebaseio.com"                        // Firebase DB Url
 #define FIREBASE_DATABASE_SECRET "5rbetXRIf3lVwI3sYvWO4n05K9xxLVqgbc93hxdu" // Firebase Auth Key
+
+// WiFi Configuration
 #define WIFI_SSID "XuxusHaus"
 #define WIFI_PASSWORD "FridaMaria19871992"
-#define INTERNAL_LED_PIN D4
 
-FirebaseData firebaseData; // Global object where all data from Firebase will live
+FirebaseData firebaseData;                        // Firebase data instance
+MFRC522 mfrc522(READER_SS_PIN, READER_RESET_PIN); // Reader instance
 
 // For debugging only, delete when done
 void printResult(FirebaseData &data);
@@ -26,10 +37,28 @@ void printResult(FirebaseData &data);
 void setup()
 {
   // Pin setup
-  pinMode(INTERNAL_LED_PIN, OUTPUT);
+  // pinMode(INTERNAL_LED_PIN, OUTPUT);
 
   // Start serial feed
   Serial.begin(115200);
+
+  // Welcome message
+  Serial.println("");
+  Serial.println("FOCUS BOX v0.1 by Joao Gomes");
+  Serial.println("Project for Advanced Human-Interface Design, Hochschule Rhein-Waal");
+  Serial.println("Fuck COVID-19.");
+  Serial.println("");
+  Serial.println("Initializing now...");
+  Serial.println("");
+  Serial.println("");
+
+  // Start RFID Reader
+  Serial.println("Initializing RFID Reader...");
+  SPI.begin();
+  mfrc522.PCD_Init();
+  Serial.print("RFID Serial Version: ");
+  mfrc522.PCD_DumpVersionToSerial();
+  Serial.println("");
 
   // Start WiFi connection
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -39,10 +68,10 @@ void setup()
     Serial.print(".");
     delay(300);
   }
-  Serial.println();
+  Serial.println("");
   Serial.print("Connected with IP: ");
   Serial.println(WiFi.localIP());
-  Serial.println();
+  Serial.println("");
 
   // Connect to Firebase and set it up
   Firebase.begin(FIREBASE_HOST_URL, FIREBASE_DATABASE_SECRET);
@@ -50,40 +79,39 @@ void setup()
   Firebase.setReadTimeout(firebaseData, 1000 * 60);
   Firebase.setwriteSizeLimit(firebaseData, "tiny");
   Firebase.enableClassicRequest(firebaseData, true);
+
+  // Check if stream is available
+  // if (!Firebase.beginStream(firebaseData, "/led_status")) {
+  //   Serial.println("------------------------------------");
+  //   Serial.println("Can't begin stream connection...");
+  //   Serial.println("REASON: " + firebaseData.errorReason());
+  //   Serial.println("------------------------------------");
+  //   Serial.println();
+  // }
+
 }
 
 void loop()
 {
-  // Reading database flag and setting it to LED indicator
-  // See https://github.com/mobizt/Firebase-ESP8266#read-data
-  Serial.println();
-  Serial.print("Attemting to read boolean from Firebase...");
-  if (Firebase.getBool(firebaseData, "/led_status"))
-  {
-    if (firebaseData.dataType() == "boolean")
-    {
-      if (firebaseData.boolData() == true)
-      {
-        digitalWrite(INTERNAL_LED_PIN, LOW); // it is active low on the ESP-01)
-      }
-      else
-      {
-        digitalWrite(INTERNAL_LED_PIN, HIGH);
-      }
-    }
+  // Return if no card is present
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
   }
-  else
-  {
-    Serial.println(firebaseData.errorReason());
+
+  // Return if can't read card
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
   }
+
+  mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
   delay(500);
 }
 
-// ! Delete this when development is done!
+// !! DELETE THIS WHEN FINISHED WITH PROJECT
+// !! PRINT FUNCTION FOR DEBUGGING PURPOSES
 void printResult(FirebaseData &data)
 {
-  // See code at https://github.com/mobizt/Firebase-ESP8266/blob/master/examples/Basic/Basic.ino
-  // This function prints results from Firebase's responses
+
   if (data.dataType() == "int")
     Serial.println(data.intData());
   else if (data.dataType() == "float")

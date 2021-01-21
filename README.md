@@ -55,7 +55,7 @@ http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 Save `settings.json` and close it.
 
-Open the Arduino extension Board Manager window. It should update its list using the new URL you just added to `settings.json`.
+Open the Arduino Extension Board Manager window. It should update its list using the new URL you just added to `settings.json`.
 
 Search for "esp8266" on the search field. Install the board named "esp8266" by ESP8266 Community.
 
