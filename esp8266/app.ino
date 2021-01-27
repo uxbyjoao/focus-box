@@ -56,6 +56,7 @@ void setup()
   Serial.println("Initializing RFID Reader...");
   SPI.begin();
   mfrc522.PCD_Init();
+  mfrc522.PCD_SetAntennaGain(mfrc522.RxGain_max);
   Serial.print("RFID Serial Version: ");
   mfrc522.PCD_DumpVersionToSerial();
   Serial.println("");
@@ -88,23 +89,43 @@ void setup()
   //   Serial.println("------------------------------------");
   //   Serial.println();
   // }
-
 }
 
 void loop()
 {
-  // Return if no card is present
-  if (!mfrc522.PICC_IsNewCardPresent()) {
+  // Look for new cards
+  if (!mfrc522.PICC_IsNewCardPresent())
+  {
+    return;
+  }
+  if (!mfrc522.PICC_ReadCardSerial())
+  {
     return;
   }
 
-  // Return if can't read card
-  if (!mfrc522.PICC_ReadCardSerial()) {
-    return;
+  Serial.println("Card");
+
+  bool cardRemoved = false;
+  int counter = 0;
+  bool current, previous;
+  previous = !mfrc522.PICC_IsNewCardPresent();
+
+  while (!cardRemoved)
+  {
+    current = !mfrc522.PICC_IsNewCardPresent();
+
+    if (current && previous)
+      counter++;
+
+    previous = current;
+    cardRemoved = (counter > 20);
+    delay(50);
   }
 
-  mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
-  delay(500);
+  Serial.println("Card was removed");
+  delay(1000); //change value if you want to read cards faster
+  mfrc522.PICC_HaltA();
+  mfrc522.PCD_StopCrypto1();
 }
 
 // !! DELETE THIS WHEN FINISHED WITH PROJECT
