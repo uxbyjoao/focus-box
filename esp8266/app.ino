@@ -7,6 +7,7 @@
  * Github: https://github.com/uxbyjoao
  *
 */
+#include "pitches.h"
 #include "FirebaseESP8266.h"
 #include <ESP8266WiFi.h>
 #include <SPI.h>
@@ -18,6 +19,9 @@
 // #define INTERNAL_LED_PIN D4
 #define READER_SS_PIN D2
 #define READER_RESET_PIN D3
+#define BUZZER_PIN D0
+#define STATUS_LED_PIN D8
+// #define PHOTORES_PIN 9
 
 // Firebase App Configuration
 // See Firebase documentation at https://github.com/mobizt/Firebase-ESP8266
@@ -51,6 +55,10 @@ void setup()
   Serial.println("Initializing now...");
   Serial.println("");
   Serial.println("");
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(STATUS_LED_PIN, OUTPUT);
+  // pinMode(PHOTORES_PIN, INPUT);
 
   // Start RFID Reader
   Serial.println("Initializing RFID Reader...");
@@ -93,7 +101,8 @@ void setup()
 
 void loop()
 {
-  // Look for new cards
+  digitalWrite(STATUS_LED_PIN, LOW);
+  // Do nothing if no cards are found
   if (!mfrc522.PICC_IsNewCardPresent())
   {
     return;
@@ -103,7 +112,16 @@ void loop()
     return;
   }
 
-  Serial.println("Card");
+  // Phone found and scanned
+  Serial.println("Phone is on");
+  // Play sound
+  tone(BUZZER_PIN, NOTE_C6);
+  delay(50);
+  tone(BUZZER_PIN, NOTE_C7);
+  delay(50);
+  noTone(BUZZER_PIN);
+  // Turn status LED on
+  digitalWrite(STATUS_LED_PIN, HIGH);
 
   bool cardRemoved = false;
   int counter = 0;
@@ -122,8 +140,20 @@ void loop()
     delay(50);
   }
 
-  Serial.println("Card was removed");
-  delay(1000); //change value if you want to read cards faster
+  // Phone removed
+  Serial.println("Phone was removed");
+  // Play sound
+  tone(BUZZER_PIN, NOTE_C7);
+  delay(50);
+  tone(BUZZER_PIN, NOTE_C6);
+  delay(50);
+  noTone(BUZZER_PIN);
+  // Turn status LED off
+  digitalWrite(STATUS_LED_PIN, LOW);
+
+  delay(1000);
+
+  // Disable scanning
   mfrc522.PICC_HaltA();
   mfrc522.PCD_StopCrypto1();
 }
