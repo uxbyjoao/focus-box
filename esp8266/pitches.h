@@ -1,3 +1,9 @@
+/*************************************************
+ * Pitches for Arduino Piezoeletric Speaker
+ * By Mike Putnam
+ * See https://gist.github.com/mikeputnam/2820675
+ *************************************************/
+
 #define NOTE_B0  31
 #define NOTE_C1  33
 #define NOTE_CS1 35

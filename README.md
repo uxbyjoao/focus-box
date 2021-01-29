@@ -85,8 +85,6 @@ In the project's root folder, cd into `webclient` and run `npm install` to insta
 
 Go to the Arduino extension's Library Manager on VSCode and install the following libraries:
 
+- **MFRC522** _by Github Community_
 - **Firebase ESP8266 Client** _by Mobizt_
-
-### Bonus: Configure C IntelliSense for Libraries
-
-TODO
+- **Time** _by Michael Margolis
