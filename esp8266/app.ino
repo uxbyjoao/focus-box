@@ -91,6 +91,7 @@ void initializeFirebaseConnection()
 void postSessionToFirebase(void duration)
 {
   Serial.println("Sending this to the webz -- they'll know what to do.");
+  // TODO: Add logic for pushing duration to Firebase function
 }
 
 /**
