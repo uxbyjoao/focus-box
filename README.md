@@ -7,6 +7,7 @@ This is an IOT project developed for the Advanced Human-Interface Design subject
 ## Hardware Components
 
 - AZDelivery NodeMCU Lua Lolin V3 (ESP8266)
+- MFRC522 RFID Reader
 
 ## Software Libraries
 
@@ -81,7 +82,7 @@ Replace `/dev/ttyUSB0` with the folder you selected when configuring the serial 
 
 ### 5. Install Library Dependencies
 
-In the project's root folder, cd into `webclient` and run `npm install` to install the web client's dependencies.
+In the project's root folder, cd into `webclient` and `firebase` and run `npm install` inside both of them to install dependencies for the Firebase cloud function and the web client.
 
 Go to the Arduino extension's Library Manager on VSCode and install the following libraries:
 
