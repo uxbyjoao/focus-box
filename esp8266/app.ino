@@ -114,7 +114,6 @@ void setup()
   // Pin setup
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(STATUS_LED_PIN, OUTPUT);
-  // pinMode(PHOTORES_PIN, INPUT);
 
   // Initialize components
   initializeRFIDReader();
