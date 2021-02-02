@@ -8,35 +8,23 @@
  *
 */
 #include "pitches.h"
-#include <FirebaseESP8266.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
 
-// #define SERIAL_BAUD_RATE 115200
-
 // Pin Configuration
-// #define INTERNAL_LED_PIN D4
 #define READER_SS_PIN D2
 #define READER_RESET_PIN D3
 #define BUZZER_PIN D0
 #define STATUS_LED_PIN D8
-// #define PHOTORES_PIN 9
-
-// Firebase App Configuration
-// See Firebase documentation at https://github.com/mobizt/Firebase-ESP8266
-#define FIREBASE_HOST_URL "focus-box.firebaseio.com"                        // Firebase DB Url
-#define FIREBASE_DATABASE_SECRET "5rbetXRIf3lVwI3sYvWO4n05K9xxLVqgbc93hxdu" // Firebase Auth Key
 
 // WiFi Configuration
 #define WIFI_SSID "XuxusHaus"
 #define WIFI_PASSWORD "FridaMaria19871992"
 
-FirebaseData firebaseData;                        // Firebase data instance
 MFRC522 mfrc522(READER_SS_PIN, READER_RESET_PIN); // Reader instance
-
-// For debugging only, delete when done
-void printResult(FirebaseData &data);
 
 /**
  * Initializes the RFID Reader
@@ -71,30 +59,6 @@ void initializeWiFiConnection()
 }
 
 /**
- * Initializes Firebase connection
- **/
-void initializeFirebaseConnection()
-{
-  Firebase.begin(FIREBASE_HOST_URL, FIREBASE_DATABASE_SECRET);
-  Firebase.reconnectWiFi(true);
-  Firebase.setReadTimeout(firebaseData, 1000 * 60);
-  Firebase.setwriteSizeLimit(firebaseData, "tiny");
-  Firebase.enableClassicRequest(firebaseData, true);
-  Serial.println("Firebase connection done.");
-  Serial.println("");
-}
-
-/**
- * Post session duration to Firebase
- * @param duration Duration of focus session in milliseconds (from millis())
- **/
-void postSessionToFirebase(void duration)
-{
-  Serial.println("Sending this to the webz -- they'll know what to do.");
-  // TODO: Add logic for pushing duration to Firebase function
-}
-
-/**
  * ARDUINO SETUP
  **/
 void setup()
@@ -119,7 +83,7 @@ void setup()
   // Initialize components
   initializeRFIDReader();
   initializeWiFiConnection();
-  initializeFirebaseConnection();
+  // initializeFirebaseConnection();
 }
 
 /**
@@ -193,15 +157,36 @@ void loop()
   digitalWrite(STATUS_LED_PIN, LOW);
   // Log stuff
   Serial.println("Phone was removed, now stopping focus session.");
-  Serial.println("")
-      Serial.print("Total milliseconds elapsed: ");
+  Serial.println("");
+  Serial.print("Total milliseconds elapsed: ");
   Serial.print(sessionTotalTime);
+  Serial.println("");
   Serial.println("");
 
   // Post to Fisebase
-  postSessionToFirebase(sessionTotalTime)
+  WiFiClient client;
+  HTTPClient http;
 
-      Serial.println("");
+  if (http.begin(client, "http://us-central1-focus-box.cloudfunctions.net/postSession?duration=" + String(sessionTotalTime)));
+  {
+
+    int httpCode = http.GET();
+    if (httpCode > 0)
+    {
+      String payload = http.getString();
+      Serial.println("Successfully added session to Firebase.");
+      Serial.println(payload);
+    }
+    else
+    {
+      Serial.println("Something went wrong when contacting Firebase.");
+      String errorString = http.errorToString(httpCode);
+      Serial.println(errorString);
+    }
+    http.end();
+  }
+
+  Serial.println("");
 
   // Give the board a little slack...
   delay(1000);
