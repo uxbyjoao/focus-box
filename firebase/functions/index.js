@@ -11,10 +11,15 @@ exports.postSession = functions.https.onRequest(async (req, res) => {
       finish: Date.now(),
       duration: req.query.duration,
     };
+    // Log new session
     const writeResult = await admin
       .firestore()
       .collection("entries")
       .add({ ...newEntry });
+    // Stop current session
+    await admin.firestore().collection("sessions").doc("current").set({
+      started: false,
+    });
     response = {
       status: "ok",
       message: `Successfully added new time entry with ID ${writeResult.id}.`,
@@ -26,5 +31,17 @@ exports.postSession = functions.https.onRequest(async (req, res) => {
       message: "No duration present in request query.",
     };
   }
+  res.send(response);
+});
+
+exports.startSession = functions.https.onRequest(async (_, res) => {
+  await admin.firestore().collection("sessions").doc("current").set({
+    started: true,
+    start_time: Date.now(),
+  });
+  const response = {
+    status: "ok",
+    message: "Session start successfully logged to database.",
+  };
   res.send(response);
 });
