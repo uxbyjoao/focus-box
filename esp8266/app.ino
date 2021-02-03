@@ -25,6 +25,8 @@
 #define WIFI_PASSWORD "FridaMaria19871992"
 
 MFRC522 mfrc522(READER_SS_PIN, READER_RESET_PIN); // Reader instance
+WiFiClient wifiClient;
+HTTPClient httpClient;
 
 /**
  * Initializes the RFID Reader
@@ -116,12 +118,31 @@ void loop()
   noTone(BUZZER_PIN);
   // Turn status LED on
   digitalWrite(STATUS_LED_PIN, HIGH);
-  // Log stuff
+  // Tell database session has started
+  if (httpClient.begin(wifiClient, "http://us-central1-focus-box.cloudfunctions.net/startSession "))
+  {
+    int httpCode = httpClient.GET();
+    if (httpCode > 0)
+    {
+      String payload = httpClient.getString();
+      Serial.println("Successfully started session on Firebase.");
+      Serial.println(payload);
+    }
+    else
+    {
+      Serial.println("Something went wrong when contacting Firebase.");
+      String errorString = httpClient.errorToString(httpCode);
+      Serial.println(errorString);
+    }
+    httpClient.end();
+  }
+  // Log
   Serial.println("Phone is on, starting new focus session.");
 
   /**
  * CHECKS IF PHONE IS STILL IN THE BOX
  **/
+
   bool cardRemoved = false;
   int counter = 0;
   bool current, previous;
@@ -155,36 +176,31 @@ void loop()
   noTone(BUZZER_PIN);
   // Turn status LED off
   digitalWrite(STATUS_LED_PIN, LOW);
-  // Log stuff
-  Serial.println("Phone was removed, now stopping focus session.");
-  Serial.println("");
-  Serial.print("Total milliseconds elapsed: ");
-  Serial.print(sessionTotalTime);
-  Serial.println("");
-  Serial.println("");
-
-  // Post to Fisebase
-  WiFiClient client;
-  HTTPClient http;
-
-  if (http.begin(client, "http://us-central1-focus-box.cloudfunctions.net/postSession?duration=" + String(sessionTotalTime)));
+  // Post session to database
+  if (httpClient.begin(wifiClient, "http://us-central1-focus-box.cloudfunctions.net/postSession?duration=" + String(sessionTotalTime)))
   {
-
-    int httpCode = http.GET();
+    int httpCode = httpClient.GET();
     if (httpCode > 0)
     {
-      String payload = http.getString();
+      String payload = httpClient.getString();
       Serial.println("Successfully added session to Firebase.");
       Serial.println(payload);
     }
     else
     {
       Serial.println("Something went wrong when contacting Firebase.");
-      String errorString = http.errorToString(httpCode);
+      String errorString = httpClient.errorToString(httpCode);
       Serial.println(errorString);
     }
-    http.end();
+    httpClient.end();
   }
+  // Log
+  Serial.println("Phone was removed, now stopping focus session.");
+  Serial.println("");
+  Serial.print("Total milliseconds elapsed: ");
+  Serial.print(sessionTotalTime);
+  Serial.println("");
+  Serial.println("");
 
   Serial.println("");
 
