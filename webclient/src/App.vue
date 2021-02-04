@@ -1,27 +1,25 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <top-bar></top-bar>
+    <tracker-hero></tracker-hero>
+    <entry-list></entry-list>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import TopBar from "./components/TopBar";
+import TrackerHero from "./components/TrackerHero";
+import EntryList from "./components/EntryList";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    TopBar,
+    TrackerHero,
+    EntryList,
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>

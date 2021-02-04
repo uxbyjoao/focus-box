@@ -5,11 +5,12 @@ admin.initializeApp();
 
 exports.postSession = functions.https.onRequest(async (req, res) => {
   let response;
-  if (req.query.duration) {
+  if (req.query.duration && req.query.title) {
     const newEntry = {
       start: Date.now() - req.query.duration,
       finish: Date.now(),
       duration: req.query.duration,
+      title: req.query.title,
     };
     // Log new session
     const writeResult = await admin
