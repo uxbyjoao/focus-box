@@ -13,5 +13,7 @@ const config = {
 
 export const db = firebase.initializeApp(config).database();
 
-const { Timestamp } = firebase.database;
-export { Timestamp };
+export const dbBoxStatus = db.ref("box_status");
+
+// const { Timestamp } = firebase.database;
+// export { Timestamp };
