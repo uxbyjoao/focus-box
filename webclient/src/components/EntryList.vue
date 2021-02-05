@@ -20,11 +20,13 @@ import { entriesCollection } from "../firebase/index";
 export default {
   name: "entry-list",
   components: { EntryCard },
+
   data() {
     return {
-      entries: [],
+      entries: null,
     };
   },
+
   firestore: {
     entries: entriesCollection,
   },

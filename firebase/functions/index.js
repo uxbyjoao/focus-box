@@ -20,7 +20,7 @@ exports.startSession = functions.https.onRequest(async (_, res) => {
   // Modify box status
   try {
     await boxStatusRef.update({
-      is_running: true,
+      has_phone: true,
       start: Date.now(),
     });
     response = {
@@ -79,7 +79,7 @@ exports.resetBoxStatus = functions.firestore
   .document("/entries/{entryId}")
   .onCreate(() => {
     return boxStatusRef.set({
-      is_running: false,
+      has_phone: false,
       start: 0,
       title: "",
     });
@@ -93,10 +93,10 @@ exports.updatePreviousSession = functions.firestore
   .onCreate((snapshot, context) => {
     const newEntryVal = snapshot.data();
     return notificationRef.set({
-      entry: {
+      data: {
         id: context.params.entryId,
         ...newEntryVal,
       },
-      read: false,
+      notification_read: false,
     });
   });

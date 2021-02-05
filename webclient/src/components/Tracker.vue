@@ -1,16 +1,72 @@
 <template>
   <section class="section has-text-centered">
-    <new-session-ready></new-session-ready>
+    <!-- Session is running -->
+    <session-in-progress
+      v-if="boxStatus.has_phone"
+      :title="boxStatus.title"
+    ></session-in-progress>
+    <!-- Session is not running, but ready from frontend -->
+    <new-session-ready
+      v-else-if="ready"
+      :title="title"
+      @cancel-next-session="handleCancelNextSession"
+    ></new-session-ready>
+    <!--  -->
+    <new-session-form
+      v-else
+      :title="title"
+      @ready-next-session="handleReadyNextSession"
+    ></new-session-form>
   </section>
 </template>
 
 <script>
-// import NewSessionForm from "./NewSessionForm";
+import { boxStatusRef } from "../firebase/index";
+
+import SessionInProgress from "./SessionInProgress";
 import NewSessionReady from "./NewSessionReady";
+import NewSessionForm from "./NewSessionForm";
 
 export default {
   name: "tracker",
-  components: { NewSessionReady },
+
+  components: { SessionInProgress, NewSessionReady, NewSessionForm },
+
+  props: ["boxStatus", "nextSession"],
+
+  data() {
+    return {
+      title: "",
+      ready: false,
+    };
+  },
+
+  methods: {
+    handleBoxStatusChange(val) {
+      if (val.has_phone === true) {
+        this.ready = false;
+        this.title = "";
+      }
+    },
+
+    async handleCancelNextSession() {
+      this.ready = false;
+      this.title = "";
+      return await boxStatusRef.update({ title: "" });
+    },
+
+    async handleReadyNextSession(title) {
+      this.ready = true;
+      this.title = title;
+      if (title) {
+        return await boxStatusRef.update({ title });
+      }
+    },
+  },
+
+  watch: {
+    boxStatus: "handleBoxStatusChange",
+  },
 };
 </script>
 

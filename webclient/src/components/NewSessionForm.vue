@@ -1,5 +1,5 @@
 <template>
-  <div class="columns">
+  <div class="columns" @keydown.enter="emitReadyNextSession">
     <div
       class="column is-6-desktop is-offset-3-desktop is-8-tablet is-offset-2-tablet"
     >
@@ -17,21 +17,20 @@
             placeholder="Do user research"
             icon-right="close-circle"
             icon-right-clickable
-            v-model="session_title"
+            v-model="local_title"
             @icon-right-click="clearTitle"
           ></b-input>
         </b-field>
-        <b-button type="is-primary is-medium" expanded
+        <b-button
+          type="is-primary is-medium"
+          expanded
+          @click="emitReadyNextSession"
           >I'm ready to put my phone away.</b-button
         >
         <p class="is-size-7">
           Hint: You can also just drop the phone in the box and name your task
           later. Try it!
         </p>
-      </div>
-      <div>
-        <p class="has-text-weight-medium">See older sessions</p>
-        <b-icon icon="chevron-down"></b-icon>
       </div>
     </div>
   </div>
@@ -43,13 +42,17 @@ export default {
 
   data() {
     return {
-      session_title: "",
+      local_title: this.title,
     };
   },
 
   methods: {
     clearTitle() {
-      this.session_title = "";
+      this.local_title = "";
+    },
+
+    emitReadyNextSession() {
+      return this.$emit("ready-next-session", this.local_title);
     },
   },
 };

@@ -1,17 +1,13 @@
 <template>
   <div id="app">
     <top-bar></top-bar>
-    <tracker box-status="box_status"></tracker>
+    <tracker :box-status="boxStatus"></tracker>
     <entry-list></entry-list>
   </div>
 </template>
 
 <script>
-import {
-  boxStatusRef,
-  prevSessionRef,
-  entriesCollection,
-} from "./firebase/index";
+import { boxStatusRef, prevSessionRef } from "./firebase/index";
 
 import TopBar from "./components/TopBar";
 import Tracker from "./components/Tracker";
@@ -28,20 +24,40 @@ export default {
 
   data() {
     return {
-      loading: true,
-      box_status: {},
-      previous_session: {},
-      entries: [],
+      boxStatus: {},
+      prevSession: {},
     };
   },
 
   firebase: {
-    box_status: boxStatusRef,
-    previous_session: prevSessionRef,
+    boxStatus: boxStatusRef,
+    prevSession: prevSessionRef,
   },
 
-  firestore: {
-    entries: entriesCollection,
+  methods: {
+    async handleNewPrevSession(val) {
+      if (val.notification_read === false) {
+        let title;
+
+        if (val.data.title === "") {
+          title = "Untitled Session";
+        } else {
+          title = val.data.title;
+        }
+
+        this.$buefy.snackbar.open({
+          type: "is-success",
+          message: `Added ${title} with duration of ${val.data.duration}.`,
+          position: "is-bottom",
+        });
+
+        await prevSessionRef.update({ notification_read: true });
+      }
+    },
+  },
+
+  watch: {
+    prevSession: "handleNewPrevSession",
   },
 };
 </script>
