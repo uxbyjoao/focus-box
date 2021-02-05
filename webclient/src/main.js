@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Buefy from "buefy";
-
-// import "./styles.scss";
+import "buefy/dist/buefy.css";
 
 import App from "./App.vue";
 

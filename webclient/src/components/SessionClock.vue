@@ -1,11 +1,18 @@
 <template>
-  <div>{{ startTime }}</div>
+  <div>{{ time }}</div>
 </template>
 
 <script>
 export default {
   name: "session-clock",
-  props: ["startTime"],
+
+  props: ["start"],
+
+  computed: {
+    time() {
+      return this.start;
+    },
+  },
 };
 </script>
 

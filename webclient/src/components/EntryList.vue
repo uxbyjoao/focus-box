@@ -8,7 +8,7 @@
   </section>
   <section v-else class="section has-background-light has-text-centered">
     <p class="is-size-4">No recorded sessions yet.</p>
-    <p>Scroll up to get started!</p>
+    <p>Read the instructions above to get started!</p>
   </section>
 </template>
 

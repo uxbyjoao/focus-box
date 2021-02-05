@@ -1,9 +1,12 @@
 <template>
-  <section class="section has-text-centered">
+  <section
+    class="section section-tracker has-text-centered has-background-white"
+  >
     <!-- Session is running -->
     <session-in-progress
       v-if="boxStatus.has_phone"
       :title="boxStatus.title"
+      :start="boxStatus.start"
     ></session-in-progress>
     <!-- Session is not running, but ready from frontend -->
     <new-session-ready
@@ -71,4 +74,20 @@ export default {
 </script>
 
 <style>
+.section-tracker {
+  height: 550px;
+}
+
+.section-tracker .columns {
+  /* background-color: red; */
+  height: 100%;
+}
+
+.section-tracker .columns .interior {
+  /* background-color: green; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 </style>
