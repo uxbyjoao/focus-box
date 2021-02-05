@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/firestore";
 
 const config = {
   apiKey: process.env.VUE_APP_FIREBASE_APIKEY,
@@ -11,9 +12,10 @@ const config = {
   appId: process.env.VUE_APP_FIREBASE_APPID,
 };
 
-export const db = firebase.initializeApp(config).database();
+export const firebaseApp = firebase.initializeApp(config);
 
-export const dbBoxStatus = db.ref("box_status");
+export const realtimeDb = firebaseApp.database();
+export const firestoreDb = firebaseApp.firestore();
 
-// const { Timestamp } = firebase.database;
-// export { Timestamp };
+export const boxStatusRef = realtimeDb.ref("box_status");
+export const entriesCollection = firestoreDb.collection("entries");

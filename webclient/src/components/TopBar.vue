@@ -7,16 +7,16 @@
     </template>
 
     <template #end>
-      <b-navbar-item tag="div">
-        <p>Created by <strong>João Gomes</strong></p>
-        <p>v0.0.1</p>
-      </b-navbar-item>
+      <b-navbar-item> About </b-navbar-item>
+      <b-navbar-item tag="span">v0.0.1</b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "top-bar",
+};
 </script>
 
 <style>

@@ -4,11 +4,12 @@ import "buefy/dist/buefy.css";
 
 import App from "./App.vue";
 
-import { rtdbPlugin } from "vuefire";
+import { rtdbPlugin, firestorePlugin } from "vuefire";
 
 Vue.config.productionTip = false;
 
 Vue.use(rtdbPlugin);
+Vue.use(firestorePlugin);
 Vue.use(Buefy);
 
 new Vue({

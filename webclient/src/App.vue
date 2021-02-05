@@ -12,7 +12,7 @@ import TrackerHero from "./components/TrackerHero";
 import EntryList from "./components/EntryList";
 
 export default {
-  name: "App",
+  name: "app",
   components: {
     TopBar,
     TrackerHero,
