@@ -96,8 +96,9 @@
 </template>
 
 <script>
-import SessionClock from "./SessionClock.vue";
 import { boxStatusRef } from "../firebase/index";
+
+import SessionClock from "./SessionClock.vue";
 
 export default {
   name: "tracker-hero",
