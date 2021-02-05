@@ -10,7 +10,7 @@ const realtimeDb = admin.database();
 // Collections & refs
 const entriesRef = firestoreDb.collection("entries");
 const boxStatusRef = realtimeDb.ref("box_status");
-const notificationRef = realtimeDb.ref("last_session_notification");
+const notificationRef = realtimeDb.ref("previous_session");
 
 /**
  * Starts a focus session and logs it to the realtime database
@@ -86,9 +86,9 @@ exports.resetBoxStatus = functions.firestore
   });
 
 /**
- * Watches for new session entries and notifies the frontend
+ * Adds newest session to realtime database
  */
-exports.notifyNewSessionAdded = functions.firestore
+exports.updatePreviousSession = functions.firestore
   .document("/entries/{entryId}")
   .onCreate((snapshot, context) => {
     const newEntryVal = snapshot.data();

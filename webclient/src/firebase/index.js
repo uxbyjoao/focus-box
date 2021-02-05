@@ -18,7 +18,5 @@ export const realtimeDb = firebaseApp.database();
 export const firestoreDb = firebaseApp.firestore();
 
 export const boxStatusRef = realtimeDb.ref("box_status");
+export const prevSessionRef = realtimeDb.ref("previous_session");
 export const entriesCollection = firestoreDb.collection("entries");
-export const lastSessionNotificationRef = realtimeDb.ref(
-  "last_session_notification"
-);

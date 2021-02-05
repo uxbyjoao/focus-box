@@ -1,70 +1,47 @@
 <template>
   <div id="app">
     <top-bar></top-bar>
-    <tracker-hero></tracker-hero>
+    <tracker box-status="box_status"></tracker>
     <entry-list></entry-list>
   </div>
 </template>
 
 <script>
-import { lastSessionNotificationRef } from "./firebase/index";
+import {
+  boxStatusRef,
+  prevSessionRef,
+  entriesCollection,
+} from "./firebase/index";
 
 import TopBar from "./components/TopBar";
-import TrackerHero from "./components/TrackerHero";
+import Tracker from "./components/Tracker";
 import EntryList from "./components/EntryList";
 
 export default {
   name: "app",
+
   components: {
     TopBar,
-    TrackerHero,
+    Tracker,
     EntryList,
   },
 
   data() {
     return {
-      last_session_notification: {
-        entry: {
-          title: "",
-        },
-        read: true,
-      },
+      loading: true,
+      box_status: {},
+      previous_session: {},
+      entries: [],
     };
   },
 
-  computed: {
-    session_title_computed() {
-      return this.last_session_notification.entry.title === ""
-        ? "Untitled Session"
-        : this.last_session_notification.entry.title;
-    },
-  },
-
   firebase: {
-    last_session_notification: lastSessionNotificationRef,
+    box_status: boxStatusRef,
+    previous_session: prevSessionRef,
   },
 
-  methods: {
-    handleSnackbarOpen(val) {
-      if (!val.read) {
-        this.$buefy.snackbar.open({
-          type: "is-primary",
-          message: `Finished ${this.session_title_computed} after ${val.entry.duration}.`,
-          position: "is-bottom",
-          indefinite: true,
-          onAction: async () => {
-            await lastSessionNotificationRef.update({ read: true });
-          },
-        });
-      }
-    },
-  },
-
-  watch: {
-    last_session_notification: {
-      immediate: true,
-      handler: "handleSnackbarOpen",
-    },
+  firestore: {
+    entries: entriesCollection,
   },
 };
 </script>
