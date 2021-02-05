@@ -2,7 +2,7 @@
   <section class="section has-background-light">
     <entry-card
       v-for="entry in entries"
-      :key="entry._id"
+      :key="entry.id"
       :entry="entry"
     ></entry-card>
   </section>
@@ -13,14 +13,14 @@ import EntryCard from "./EntryCard";
 
 const DUMMY_ENTRIES = [
   {
-    _id: "8ag7hr09235",
+    id: "8ag7hr09235",
     start: Date.now(),
     finish: Date.now(),
     duration: 12387987345,
     title: "Front-End for Focus Box",
   },
   {
-    _id: "8ag7hr09235",
+    id: "8ag7hr09235",
     start: Date.now(),
     finish: Date.now(),
     duration: 12387987345,
