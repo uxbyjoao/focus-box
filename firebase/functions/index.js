@@ -3,18 +3,24 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
+// Database instances
 const firestoreDb = admin.firestore();
 const realtimeDb = admin.database();
 
+// Collections & refs
 const entriesRef = firestoreDb.collection("entries");
 const boxStatusRef = realtimeDb.ref("box_status");
+const notificationRef = realtimeDb.ref("previous_session");
 
+/**
+ * Starts a focus session and logs it to the realtime database
+ */
 exports.startSession = functions.https.onRequest(async (_, res) => {
   let error, response;
   // Modify box status
   try {
     await boxStatusRef.update({
-      is_running: true,
+      has_phone: true,
       start: Date.now(),
     });
     response = {
@@ -30,6 +36,9 @@ exports.startSession = functions.https.onRequest(async (_, res) => {
   res.send(response);
 });
 
+/**
+ * Logs the end of a session and records session to Firestore
+ */
 exports.endSession = functions.https.onRequest(async (req, res) => {
   let response;
   // Push new session to Firestore
@@ -63,12 +72,31 @@ exports.endSession = functions.https.onRequest(async (req, res) => {
   res.send(response);
 });
 
+/**
+ * Watches for new session entries and resets the box after they're logged
+ */
 exports.resetBoxStatus = functions.firestore
-  .document("/entries/{documentId}")
+  .document("/entries/{entryId}")
   .onCreate(() => {
     return boxStatusRef.set({
-      is_running: false,
+      has_phone: false,
       start: 0,
       title: "",
+    });
+  });
+
+/**
+ * Adds newest session to realtime database
+ */
+exports.updatePreviousSession = functions.firestore
+  .document("/entries/{entryId}")
+  .onCreate((snapshot, context) => {
+    const newEntryVal = snapshot.data();
+    return notificationRef.set({
+      data: {
+        id: context.params.entryId,
+        ...newEntryVal,
+      },
+      notification_read: false,
     });
   });
