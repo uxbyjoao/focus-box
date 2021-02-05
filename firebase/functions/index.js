@@ -13,7 +13,7 @@ exports.startSession = functions.https.onRequest(async (_, res) => {
   let error, response;
   // Modify box status
   try {
-    await boxStatusRef.set({
+    await boxStatusRef.update({
       is_running: true,
       start: Date.now(),
     });

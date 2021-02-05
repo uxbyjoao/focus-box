@@ -177,7 +177,7 @@ void loop()
   // Turn status LED off
   digitalWrite(STATUS_LED_PIN, LOW);
   // Post session to database
-  if (httpClient.begin(wifiClient, "http://us-central1-focus-box.cloudfunctions.net/postSession?duration=" + String(sessionTotalTime)))
+  if (httpClient.begin(wifiClient, "http://us-central1-focus-box.cloudfunctions.net/endSession?duration=" + String(sessionTotalTime)))
   {
     int httpCode = httpClient.GET();
     if (httpCode > 0)
@@ -189,8 +189,8 @@ void loop()
     else
     {
       Serial.println("Something went wrong when contacting Firebase.");
-      String errorString = httpClient.errorToString(httpCode);
-      Serial.println(errorString);
+      String error = httpClient.errorToString(httpCode);
+      Serial.println(error);
     }
     httpClient.end();
   }
