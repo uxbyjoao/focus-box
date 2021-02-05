@@ -1,39 +1,34 @@
 <template>
-  <section class="section has-background-light">
+  <section v-if="entries.length > 0" class="section has-background-light">
     <entry-card
       v-for="entry in entries"
       :key="entry.id"
       :entry="entry"
     ></entry-card>
   </section>
+  <section v-else class="section has-background-light has-text-centered">
+    <p class="is-size-4">No recorded sessions yet.</p>
+    <p>Scroll up to get started!</p>
+  </section>
 </template>
 
 <script>
 import EntryCard from "./EntryCard";
 
-const DUMMY_ENTRIES = [
-  {
-    id: "8ag7hr09235",
-    start: Date.now(),
-    finish: Date.now(),
-    duration: 12387987345,
-    title: "Front-End for Focus Box",
-  },
-  {
-    id: "8ag7hr09235",
-    start: Date.now(),
-    finish: Date.now(),
-    duration: 12387987345,
-    title: "Front-End for Focus Box",
-  },
-];
+import { entriesCollection } from "../firebase/index";
 
 export default {
+  name: "entry-list",
   components: { EntryCard },
+
   data() {
     return {
-      entries: DUMMY_ENTRIES,
+      entries: null,
     };
+  },
+
+  firestore: {
+    entries: entriesCollection,
   },
 };
 </script>
