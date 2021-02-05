@@ -41,7 +41,7 @@ exports.endSession = functions.https.onRequest(async (req, res) => {
         title: val.title,
         start: val.start,
         end: Date.now(),
-        duration: req.query.duration,
+        duration: Number(req.query.duration),
       };
       const newRef = await entriesRef.add(newSession);
       response = {
