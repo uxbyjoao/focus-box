@@ -1,23 +1,17 @@
 import Vue from "vue";
 import Buefy from "buefy";
+import { rtdbPlugin, firestorePlugin } from "vuefire";
 import "buefy/dist/buefy.css";
 
+import { appFilters } from "./filters/index";
 import App from "./App.vue";
-
-import { rtdbPlugin, firestorePlugin } from "vuefire";
 
 Vue.config.productionTip = false;
 
-Vue.use(rtdbPlugin);
-Vue.use(firestorePlugin);
-Vue.use(Buefy);
+const appPlugins = [rtdbPlugin, firestorePlugin, Buefy];
 
-// Global filter for formatting entry titles
-Vue.filter("entry_title", function(title) {
-  if (!title || title.length === 0) {
-    return "Untitled Session";
-  } else return title;
-});
+appPlugins.forEach((plugin) => Vue.use(plugin));
+appFilters.forEach((filter) => Vue.filter(filter.id, filter.definition));
 
 new Vue({
   render: (h) => h(App),

@@ -25,12 +25,13 @@
 </template>
 
 <script>
-import { intervalToDuration } from "date-fns";
+import { formatEntryDuration } from "../mixins/index";
 
 export default {
   name: "session-in-progress",
 
   props: ["title", "start"],
+  mixins: [formatEntryDuration],
 
   data() {
     return {
@@ -41,17 +42,7 @@ export default {
 
   computed: {
     duration() {
-      // TODO: Optimize this, please
-      const prependZero = (num) =>
-        String(num).length < 2 ? `0${num}` : `${num}`;
-      const duration = intervalToDuration({
-        start: this.start,
-        end: this.now,
-      });
-      const hours = prependZero(duration.hours);
-      const minutes = prependZero(duration.minutes);
-      const seconds = prependZero(duration.seconds);
-      return `${hours}:${minutes}:${seconds}`;
+      return this.formatEntryDuration(this.start, this.now);
     },
   },
 

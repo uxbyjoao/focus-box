@@ -2,7 +2,6 @@
   <div class="modal-card" style="witdth: auto; margin: 0 auto">
     <header class="modal-card-head">
       <p class="modal-card-title">Editing "{{ entry.title | entry_title }}"</p>
-      <button type="button" class="delete" @click="$emit('close')" />
     </header>
     <section class="modal-card-body">
       <b-field label="Entry Title">

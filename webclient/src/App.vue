@@ -13,6 +13,8 @@ import TopBar from "./components/TopBar";
 import Tracker from "./components/Tracker";
 import EntryList from "./components/EntryList";
 
+import { formatEntryDuration, formatEntryTitle } from "./mixins/index";
+
 export default {
   name: "app",
 
@@ -21,6 +23,8 @@ export default {
     Tracker,
     EntryList,
   },
+
+  mixins: [formatEntryTitle, formatEntryDuration],
 
   data() {
     return {
@@ -37,18 +41,13 @@ export default {
   methods: {
     async handleNewPrevSession(val) {
       if (val.notification_read === false) {
-        let title;
-
-        if (val.data.title === "") {
-          title = "Untitled Session";
-        } else {
-          title = val.data.title;
-        }
-
+        const title = this.formatEntryTitle(val.data.title);
+        const duration = this.formatEntryDuration(val.data.start, val.data.end);
         this.$buefy.snackbar.open({
           type: "is-success",
-          message: `Added ${title} with duration of ${val.data.duration}.`,
+          message: `Added "${title}" with duration of ${duration}.`,
           position: "is-bottom",
+          duration: 10000,
         });
 
         await prevSessionRef.update({ notification_read: true });

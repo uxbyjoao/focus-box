@@ -7,8 +7,8 @@
     </template>
 
     <template #end>
-      <b-navbar-item> About </b-navbar-item>
-      <b-navbar-item tag="span">v0.0.1</b-navbar-item>
+      <!-- <b-navbar-item> About </b-navbar-item> -->
+      <b-navbar-item tag="span">v0.1</b-navbar-item>
     </template>
   </b-navbar>
 </template>

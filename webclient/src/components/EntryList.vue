@@ -2,10 +2,12 @@
   <section v-if="entries.length > 0" class="section has-background-light">
     <h2 class="subtitle has-text-centered">Past Sessions</h2>
     <div class="columns">
-      <div
-        class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet"
-      >
-        <b-table :data="entries">
+      <div class="column is-10-desktop is-offset-1-desktop is-12-tablet">
+        <b-table
+          :data="entries"
+          default-sort-direction="desc"
+          default-sort="end"
+        >
           <b-table-column field="title" label="Title" v-slot="props">
             <strong>{{ props.row.title | entry_title }}</strong>
           </b-table-column>
@@ -16,7 +18,7 @@
             label="Start Time"
             v-slot="props"
           >
-            {{ props.row.start }}
+            {{ props.row.start | entry_date }}
           </b-table-column>
           <b-table-column
             sortable
@@ -25,7 +27,7 @@
             label="End Time"
             v-slot="props"
           >
-            {{ props.row.end }}
+            {{ props.row.end | entry_date }}
           </b-table-column>
           <b-table-column
             sortable
@@ -34,7 +36,7 @@
             label="Duration"
             v-slot="props"
           >
-            {{ props.row.duration }}
+            {{ props.row.duration | entry_duration }}
           </b-table-column>
           <b-table-column width="100" v-slot="props">
             <div class="buttons">
@@ -126,7 +128,7 @@ export default {
         });
       } catch (error) {
         this.$buefy.toast.open({
-          message: "Couldn't delete entry. Check your connection.",
+          message: "Couldn't update entry. Check your connection.",
           type: "is-warning",
           position: "is-bottom",
         });
