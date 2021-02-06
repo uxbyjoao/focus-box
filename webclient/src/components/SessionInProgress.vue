@@ -1,5 +1,5 @@
 <template>
-  <div class="columns">
+  <div class="columns" :key="this.intervalId">
     <div
       class="column is-6-desktop is-offset-3-desktop is-8-tablet is-offset-2-tablet"
     >
@@ -11,7 +11,9 @@
           <p>Close the box and focus on</p>
           <h1 class="is-size-3">{{ computed_title }}</h1>
         </div>
-        <session-clock :start="start"></session-clock>
+        <div>
+          <p>{{ duration }}</p>
+        </div>
         <b-notification :closable="false" type="is-success is-light">
           <p class="is-size-5">
             When you're done, remove the phone from the box.
@@ -23,14 +25,17 @@
 </template>
 
 <script>
-import SessionClock from "./SessionClock";
-
 export default {
   name: "session-in-progress",
 
-  components: { SessionClock },
-
   props: ["title", "start"],
+
+  data() {
+    return {
+      now: Date.now(),
+      intervalId: null,
+    };
+  },
 
   computed: {
     computed_title() {
@@ -38,6 +43,28 @@ export default {
         return "Untitled Session";
       } else return this.title;
     },
+
+    duration() {
+      const result = this.now - this.start;
+      if (result < 0) {
+        return 0;
+      } else return result;
+    },
+  },
+
+  methods: {
+    incrementNow() {
+      this.now += 1000;
+      console.log(this.duration);
+    },
+  },
+
+  created() {
+    this.intervalId = setInterval(this.incrementNow, 1000);
+  },
+
+  destroyed() {
+    clearInterval(this.intervalId);
   },
 };
 </script>

@@ -6,13 +6,7 @@
 export default {
   name: "session-clock",
 
-  props: ["start"],
-
-  computed: {
-    time() {
-      return this.start;
-    },
-  },
+  props: ["time"],
 };
 </script>
 
