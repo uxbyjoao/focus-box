@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { intervalToDuration } from "date-fns";
+
 export default {
   name: "session-in-progress",
 
@@ -45,17 +47,23 @@ export default {
     },
 
     duration() {
-      const result = this.now - this.start;
-      if (result < 0) {
-        return 0;
-      } else return result;
+      // TODO: Optimize this, please
+      const prependZero = (num) =>
+        String(num).length < 2 ? `0${num}` : `${num}`;
+      const duration = intervalToDuration({
+        start: this.start,
+        end: this.now,
+      });
+      const hours = prependZero(duration.hours);
+      const minutes = prependZero(duration.minutes);
+      const seconds = prependZero(duration.seconds);
+      return `${hours}:${minutes}:${seconds}`;
     },
   },
 
   methods: {
     incrementNow() {
       this.now += 1000;
-      console.log(this.duration);
     },
   },
 
