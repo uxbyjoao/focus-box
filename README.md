@@ -1,4 +1,4 @@
-# Focus Box
+# Focus Box v0.1
 
 ## Introduction
 
@@ -66,11 +66,11 @@ First, connect your ESP8266 board to the computer if you haven't already.
 
 On VSCode's bottom bar, click on "Select Board Type". On this window, select the following options:
 
-- **Selected Board:**  NodeMCU 1.0 (ESP-12E Module)
+- **Selected Board:** NodeMCU 1.0 (ESP-12E Module)
 - **CPU Frequency:** 80MHz
--  **Flash Size:** 4MB (FS:3MB OTA:~512KB)
+- **Flash Size:** 4MB (FS:3MB OTA:~512KB)
 
-We will now select the serial port to where our board is connected. Linux creates a folder for this. On your Terminal, type `ls /dev/tty*` and look for a folder that includes either `USB*` or `ACM*`, where "*" is a number (i.e. USB0). That's the serial port name you should select in VSCode. Go to VSCode's bottom bar, click on "Select Serial Port" and select the corresponding folder you found on your Terminal.
+We will now select the serial port to where our board is connected. Linux creates a folder for this. On your Terminal, type `ls /dev/tty*` and look for a folder that includes either `USB*` or `ACM*`, where "\*" is a number (i.e. USB0). That's the serial port name you should select in VSCode. Go to VSCode's bottom bar, click on "Select Serial Port" and select the corresponding folder you found on your Terminal.
 
 Just to make sure we get no errors, we have to give our user permission to modify this folder, or else we will not be able to upload sketches to our board. To do that, run `chmod` like so:
 
@@ -88,4 +88,4 @@ Go to the Arduino extension's Library Manager on VSCode and install the followin
 
 - **MFRC522** _by Github Community_
 - **Firebase ESP8266 Client** _by Mobizt_
-- **Time** _by Michael Margolis
+- **Time** \_by Michael Margolis
