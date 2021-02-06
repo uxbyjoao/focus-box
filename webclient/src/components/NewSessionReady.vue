@@ -9,7 +9,7 @@
         </div>
         <div>
           <p>You have now pledged to focus on</p>
-          <h1 class="is-size-3">{{ computed_title }}</h1>
+          <h1 class="is-size-3">{{ title | entry_title }}</h1>
         </div>
         <b-notification :closable="false" type="is-success is-light">
           <p class="is-size-5">
@@ -31,14 +31,6 @@ export default {
   name: "new-session-ready",
 
   props: ["title"],
-
-  computed: {
-    computed_title() {
-      if (!this.title || this.title.length === 0) {
-        return "Untitled Session";
-      } else return this.title;
-    },
-  },
 
   methods: {
     emitCancelNextSession() {

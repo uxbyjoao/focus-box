@@ -12,6 +12,13 @@ Vue.use(rtdbPlugin);
 Vue.use(firestorePlugin);
 Vue.use(Buefy);
 
+// Global filter for formatting entry titles
+Vue.filter("entry_title", function(title) {
+  if (!title || title.length === 0) {
+    return "Untitled Session";
+  } else return title;
+});
+
 new Vue({
   render: (h) => h(App),
 }).$mount("#app");
